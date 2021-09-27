@@ -1,8 +1,6 @@
 // AntDesign
-import { Row, Col, Image, Table, Button, Input, Space, Divider, Radio } from 'antd';
+import { Row, Col, Image, Table, Button, Input, Space, Divider, Radio, List } from 'antd';
 import { HeartTwoTone, DeleteOutlined, ScheduleOutlined, EditOutlined } from '@ant-design/icons';
-
-const { Search } = Input;
 
 // Next
 import Link from 'next/link'
@@ -42,18 +40,13 @@ const onSelectChange = selectedRowKeys => {
 };
 
 let data = [
-  {
-    tarefa: 'eita',
-  }
+  'eita'
 ];
 
 const AddItem = (item) => {
   console.log('adicionando item na lista -> ', item);
 
-  data.push({
-    tarefa: item
-  });
-
+  data.push(item);
 }
 
 export default function Home() {
@@ -103,83 +96,91 @@ export default function Home() {
 
         <Col span={12} offset={5} style={{ top: 20 }}>
 
-          <Table
-            title={() =>
+          <List
+            header={
+
               <Row>
 
                 <Col span={24}>
 
-                  <Input
-                    addonBefore={
-                      <Button style={{ border: 0, height: 25, borderColor: 'transparent' }}>
-                        <ScheduleOutlined style={{ color: '#003380', fontSize: 18 }} />
-                      </Button>
-                    }
-                    placeholder="What needs to be done?"
-                    onPressEnter={() => AddItem('1')} />
+                  <Space>
+
+                    <Button style={{ border: 0, height: 25, borderColor: 'transparent' }}>
+                      <ScheduleOutlined style={{ color: Colors.Azul_Claro, fontSize: 18 }} />
+                    </Button>
+
+                    <Input
+                      placeholder="What needs to be done?"
+                      onPressEnter={(prop) => AddItem(prop.target.value)} />
+
+                  </Space>
 
                 </Col>
 
               </Row>
+
             }
-            footer={() =>
+            footer={
+              <Col span={24} offset={2}>
 
-              <Row>
-                {
-                  <>
-                    <Col span={24} offset={2}>
+                <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
 
-                      <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
+                  <Button style={{ border: 0 }}>
+                    2 items left
+                  </Button>
 
-                        <Button style={{ border: 0 }}>
-                          2 items left
-                        </Button>
+                  <Space>
 
-                        <Space>
+                    <Radio.Group value={'large'} onChange={(prop) => console.log('alteração do radio -> ', prop.target)}>
 
-                          <Radio.Group value={'large'} onChange={(prop) => console.log('alteração do radio -> ', prop.target)}>
+                      <Radio.Button value="all"
+                        style={selected === 'all' ? selectedStyle : unselectedStyle}
+                        onClick={() => setSelected('all')}>
 
-                            <Radio.Button value="all" 
-                              style={selected === 'all' ? selectedStyle : unselectedStyle}
-                              onClick={() => setSelected('all')}>
+                        All
+                      </Radio.Button>
 
-                              All
-                            </Radio.Button>
+                      <Radio.Button value="active"
+                        style={selected === 'active' ? selectedStyle : unselectedStyle}
+                        onClick={() => setSelected('active')}>
 
-                            <Radio.Button value="active"
-                              style={selected === 'active' ? selectedStyle : unselectedStyle}
-                              onClick={() => setSelected('active')}>
+                        Active
+                      </Radio.Button>
 
-                              Active
-                            </Radio.Button>
+                      <Radio.Button value="completed"
+                        style={selected === 'completed' ? selectedStyle : unselectedStyle}
+                        onClick={() => setSelected('completed')}>
 
-                            <Radio.Button value="completed"
-                              style={selected === 'completed' ? selectedStyle : unselectedStyle}
-                              onClick={() => setSelected('completed')}>
+                        Completed
+                      </Radio.Button>
 
-                              Completed
-                            </Radio.Button>
+                    </Radio.Group>
 
-                          </Radio.Group>
+                  </Space>
 
-                        </Space>
+                  <Button>
+                    Clear completed
+                  </Button>
 
-                        <Button>
-                          Clear completed
-                        </Button>
+                </Space>
 
-                      </Space>
-
-                    </Col>
-
-                  </>
-                }
-              </Row>
+              </Col>
             }
-            columns={columns}
+            bordered
             dataSource={data}
-            rowSelection={rowSelection}
-            pagination={false} />
+            renderItem={item => (
+              <List.Item>
+                {item}
+
+                <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
+                  <EditOutlined style={{ color: Colors.Azul }} />
+                </Button>
+
+                <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
+                  <DeleteOutlined style={{ color: '#fff' }} />
+                </Button>
+              </List.Item>
+            )} />
 
         </Col>
 
