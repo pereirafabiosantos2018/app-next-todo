@@ -9,6 +9,7 @@ import Link from 'next/link'
 
 // Enums
 import { Colors } from '../Enums/enums';
+import { useState } from 'react';
 
 
 const columns = [
@@ -37,16 +38,37 @@ const columns = [
 
 const onSelectChange = selectedRowKeys => {
   console.log('selectedRowKeys changed: ', selectedRowKeys);
-  this.setState({ selectedRowKeys });
+  // this.setState({ selectedRowKeys });
 };
 
-const data = [
+let data = [
   {
     tarefa: 'eita',
   }
 ];
 
+const AddItem = (item) => {
+  console.log('adicionando item na lista -> ', item);
+
+  data.push({
+    tarefa: item
+  });
+
+}
+
 export default function Home() {
+
+  const selectedStyle = {
+    backgroundColor: Colors.Azul_Claro,
+    color: Colors.Branco
+  };
+
+  const unselectedStyle = {
+    backgroundColor: Colors.Branco,
+    color: Colors.Preto
+  };
+
+  const [selected, setSelected] = useState('all');
 
   const rowSelection = {
     // selectedRowKeys,
@@ -56,7 +78,7 @@ export default function Home() {
   return (
 
     <>
-      <div style={{ backgroundColor: Colors.Azul, height: 250, width: '100%' }}>
+      <div style={{ backgroundColor: '#001529', height: 250, width: '100%' }}>
 
         <Row>
 
@@ -93,8 +115,8 @@ export default function Home() {
                         <ScheduleOutlined style={{ color: '#003380', fontSize: 18 }} />
                       </Button>
                     }
-                    placeholder="O que precisa ser feito?"
-                    onPressEnter={() => alert('apertei enter, aeeee')} />
+                    placeholder="What needs to be done?"
+                    onPressEnter={() => AddItem('1')} />
 
                 </Col>
 
@@ -105,25 +127,46 @@ export default function Home() {
               <Row>
                 {
                   <>
-                    <Col span={24} offset={1}>
+                    <Col span={24} offset={2}>
 
                       <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
 
                         <Button style={{ border: 0 }}>
-                          2 itens cadastrados
+                          2 items left
                         </Button>
 
                         <Space>
 
-                          <Radio.Group value={'large'}>
-                            <Radio.Button value="all" style={{ backgroundColor: Colors.Azul, color: '#fff' }}>All</Radio.Button>
-                            <Radio.Button value="active">Active</Radio.Button>
-                            <Radio.Button value="completed">Completed</Radio.Button>
+                          <Radio.Group value={'large'} onChange={(prop) => console.log('alteração do radio -> ', prop.target)}>
+
+                            <Radio.Button value="all" 
+                              style={selected === 'all' ? selectedStyle : unselectedStyle}
+                              onClick={() => setSelected('all')}>
+
+                              All
+                            </Radio.Button>
+
+                            <Radio.Button value="active"
+                              style={selected === 'active' ? selectedStyle : unselectedStyle}
+                              onClick={() => setSelected('active')}>
+
+                              Active
+                            </Radio.Button>
+
+                            <Radio.Button value="completed"
+                              style={selected === 'completed' ? selectedStyle : unselectedStyle}
+                              onClick={() => setSelected('completed')}>
+
+                              Completed
+                            </Radio.Button>
+
                           </Radio.Group>
 
-                          <Divider type="vertical" style={{ height: 20 }} />
-
                         </Space>
+
+                        <Button>
+                          Clear completed
+                        </Button>
 
                       </Space>
 
@@ -135,6 +178,7 @@ export default function Home() {
             }
             columns={columns}
             dataSource={data}
+            rowSelection={rowSelection}
             pagination={false} />
 
         </Col>
