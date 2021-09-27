@@ -1,6 +1,6 @@
 // AntDesign
-import { Row, Col, Image, Table, Button, Input } from 'antd';
-import { HeartTwoTone, DeleteOutlined, ScheduleOutlined } from '@ant-design/icons';
+import { Row, Col, Image, Table, Button, Input, Space, Divider, Radio } from 'antd';
+import { HeartTwoTone, DeleteOutlined, ScheduleOutlined, EditOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
@@ -15,14 +15,20 @@ const columns = [
   {
     // title: 'Tarefa',
     dataIndex: 'tarefa',
+
     render: (valor) => {
       return (
         <>
           {valor}
 
-          <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20 }} ghost>
+          <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
+            <EditOutlined style={{ color: Colors.Azul }} />
+          </Button>
+
+          <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
             <DeleteOutlined style={{ color: '#fff' }} />
           </Button>
+
         </>
       )
     }
@@ -78,22 +84,55 @@ export default function Home() {
           <Table
             title={() =>
               <Row>
+
                 <Col span={24}>
 
                   <Input
                     addonBefore={
                       <Button style={{ border: 0, height: 25, borderColor: 'transparent' }}>
-                        <ScheduleOutlined style={{ color: '#003380', fontSize: 20 }} />
+                        <ScheduleOutlined style={{ color: '#003380', fontSize: 18 }} />
                       </Button>
                     }
                     placeholder="O que precisa ser feito?"
-                    // onSearch={onSearch} 
-                    enterButton />
+                    onPressEnter={() => alert('apertei enter, aeeee')} />
 
                 </Col>
+
               </Row>
             }
-            footer={() => 'Aqui vai os itens restantes e os três botões lá'}
+            footer={() =>
+
+              <Row>
+                {
+                  <>
+                    <Col span={24} offset={1}>
+
+                      <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
+
+                        <Button style={{ border: 0 }}>
+                          2 itens cadastrados
+                        </Button>
+
+                        <Space>
+
+                          <Radio.Group value={'large'}>
+                            <Radio.Button value="all" style={{ backgroundColor: Colors.Azul, color: '#fff' }}>All</Radio.Button>
+                            <Radio.Button value="active">Active</Radio.Button>
+                            <Radio.Button value="completed">Completed</Radio.Button>
+                          </Radio.Group>
+
+                          <Divider type="vertical" style={{ height: 20 }} />
+
+                        </Space>
+
+                      </Space>
+
+                    </Col>
+
+                  </>
+                }
+              </Row>
+            }
             columns={columns}
             dataSource={data}
             pagination={false} />
