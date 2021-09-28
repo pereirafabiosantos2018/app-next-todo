@@ -21,6 +21,10 @@ const onSelectChange = selectedRowKeys => {
 
 let idAtual = 0;
 
+const sortItems = (items) => {
+  return items.sort((a, b) => a.id - b.id);
+}
+
 export default function Home() {
 
   const [selected, setSelected] = useState('all');
@@ -161,18 +165,20 @@ export default function Home() {
 
                   <Space>
 
-                    <Checkbox key={item.id} onChange={(e) => {
+                    <Checkbox
+                      key={item.id}
+                      onChange={(e) => {
 
-                      item.completed = !item.completed;
-                      console.log('item atual -> ', item);
+                        item.completed = !item.completed;
+                        console.log('item atual -> ', item);
 
-                      let itensRestantes = lista.filter(x => x.id !== item.id);
-                      console.log('itens restantes -> ', itensRestantes);
+                        let itensRestantes = lista.filter(x => x.id !== item.id);
+                        console.log('itens restantes -> ', itensRestantes);
 
-                      itensRestantes.push(item);
+                        itensRestantes.push(item);
 
-                      setItem(itensRestantes)
-                    }} />
+                        setItem(sortItems(itensRestantes))
+                      }} />
 
                     <Col span={24} style={{ backgroundColor: 'red' }}>
                       {
@@ -223,9 +229,9 @@ export default function Home() {
                   }
 
                   <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
-                    
-                    <DeleteOutlined 
-                      style={{ color: '#fff' }} 
+
+                    <DeleteOutlined
+                      style={{ color: '#fff' }}
                       onClick={() => {
                         let itensRestantes = lista.filter(x => x.id !== item.id);
                         setItem(itensRestantes);
