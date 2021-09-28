@@ -21,8 +21,23 @@ const onSelectChange = selectedRowKeys => {
 
 let idAtual = 0;
 
-const sortItems = (items) => {
-  return items.sort((a, b) => a.id - b.id);
+const sortItemsByFilter = (items, filter) => {
+
+  console.log('itens da lista -> ', items);
+  console.log('filtro -> ', filter);
+
+  if (filter === 'active') {
+    let itensFiltrados = items.filter(x => x.completed === false);
+    return itensFiltrados.sort((a, b) => a.id - b.id);
+  }
+  else if (filter === 'completed') {
+    let itensFiltrados = items.filter(x => x.completed === true);
+    return itensFiltrados.sort((a, b) => a.id - b.id);
+  }
+  else {
+    return items.sort((a, b) => a.id - b.id);
+  }
+
 }
 
 export default function Home() {
@@ -30,6 +45,7 @@ export default function Home() {
   const [selected, setSelected] = useState('all');
   const [tarefaAtual, setTarefaAtual] = useState('');
   const [lista, setItem] = useState([]);
+  const [copyList, setCopyList] = useState([]);
   const [empty, setEmpty] = useState('');
 
   const rowSelection = {
@@ -122,21 +138,30 @@ export default function Home() {
 
                       <Radio.Button value="all"
                         style={selected === 'all' ? selectedStyle : unselectedStyle}
-                        onClick={() => setSelected('all')}>
+                        onClick={() => {
+                          setSelected('all')
+                          setItem(sortItemsByFilter(copyList, 'all'))
+                        }}>
 
                         All
                       </Radio.Button>
 
                       <Radio.Button value="active"
                         style={selected === 'active' ? selectedStyle : unselectedStyle}
-                        onClick={() => setSelected('active')}>
+                        onClick={() => {
+                          setSelected('active')
+                          setItem(sortItemsByFilter(lista, 'active'))
+                        }}>
 
                         Active
                       </Radio.Button>
 
                       <Radio.Button value="completed"
                         style={selected === 'completed' ? selectedStyle : unselectedStyle}
-                        onClick={() => setSelected('completed')}>
+                        onClick={() => {
+                          setSelected('completed')
+                          setItem(sortItemsByFilter(lista, 'completed'))
+                        }}>
 
                         Completed
                       </Radio.Button>
@@ -177,10 +202,11 @@ export default function Home() {
 
                         itensRestantes.push(item);
 
-                        setItem(sortItems(itensRestantes))
+                        setItem(sortItemsByFilter(itensRestantes, selected))
+                        setCopyList(itensRestantes)
                       }} />
 
-                    <Col span={24} style={{ backgroundColor: 'red' }}>
+                    <Col span={24}>
                       {
                         item.edit === true ?
 
@@ -212,15 +238,13 @@ export default function Home() {
                         <EditOutlined
                           style={{ color: Colors.Azul }}
                           onClick={() => {
-                            item.edit = !item.edit;
-                            console.log('item atual -> ', item);
 
+                            item.edit = !item.edit;
                             let itensRestantes = lista.filter(x => x.id !== item.id);
-                            console.log('itens restantes -> ', itensRestantes);
 
                             itensRestantes.push(item);
-
                             setItem(itensRestantes)
+                            setCopyList(itensRestantes)
                           }} />
 
                       </Button>
@@ -235,6 +259,7 @@ export default function Home() {
                       onClick={() => {
                         let itensRestantes = lista.filter(x => x.id !== item.id);
                         setItem(itensRestantes);
+                        setCopyList(itensRestantes)
                       }} />
 
                   </Button>
