@@ -1,67 +1,32 @@
 // AntDesign
-import { Row, Col, Image, Table, Button, Input, Space, Divider, Radio, List } from 'antd';
+import { Row, Col, Image, Button, Input, Space, Divider, Radio, List, Checkbox } from 'antd';
 import { HeartTwoTone, DeleteOutlined, ScheduleOutlined, EditOutlined } from '@ant-design/icons';
+
+// Estilos
+import { selectedStyle, unselectedStyle } from '../Enums/estilos'
 
 // Next
 import Link from 'next/link'
 
 // Enums
 import { Colors } from '../Enums/enums';
+
+// React
 import { useState } from 'react';
-
-
-const columns = [
-  {
-    // title: 'Tarefa',
-    dataIndex: 'tarefa',
-
-    render: (valor) => {
-      return (
-        <>
-          {valor}
-
-          <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
-            <EditOutlined style={{ color: Colors.Azul }} />
-          </Button>
-
-          <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
-            <DeleteOutlined style={{ color: '#fff' }} />
-          </Button>
-
-        </>
-      )
-    }
-  }
-];
 
 const onSelectChange = selectedRowKeys => {
   console.log('selectedRowKeys changed: ', selectedRowKeys);
   // this.setState({ selectedRowKeys });
 };
 
-let data = [
-  'eita'
-];
-
-const AddItem = (item) => {
-  console.log('adicionando item na lista -> ', item);
-
-  data.push(item);
-}
+let idAtual = 0;
 
 export default function Home() {
 
-  const selectedStyle = {
-    backgroundColor: Colors.Azul_Claro,
-    color: Colors.Branco
-  };
-
-  const unselectedStyle = {
-    backgroundColor: Colors.Branco,
-    color: Colors.Preto
-  };
-
   const [selected, setSelected] = useState('all');
+  const [tarefaAtual, setTarefaAtual] = useState('');
+  const [lista, setItem] = useState([]);
+  const [empty, setEmpty] = useState('');
 
   const rowSelection = {
     // selectedRowKeys,
@@ -75,7 +40,7 @@ export default function Home() {
 
         <Row>
 
-          <Col span={2} offset={6} style={{ marginTop: 50 }}>
+          <Col span={2} offset={7} style={{ marginTop: 50 }}>
 
             <Image
               width={150}
@@ -94,26 +59,43 @@ export default function Home() {
 
       <Row>
 
-        <Col span={12} offset={5} style={{ top: 20 }}>
+        <Col span={15} offset={4} style={{ top: 20 }}>
 
           <List
             header={
 
               <Row>
 
-                <Col span={24}>
+                <Col span={2}>
 
-                  <Space>
+                  <Button style={{ border: 0, height: 25, borderColor: 'transparent' }}>
+                    <ScheduleOutlined style={{ color: Colors.Azul_Claro, fontSize: 22 }} />
+                  </Button>
 
-                    <Button style={{ border: 0, height: 25, borderColor: 'transparent' }}>
-                      <ScheduleOutlined style={{ color: Colors.Azul_Claro, fontSize: 18 }} />
-                    </Button>
+                </Col>
 
-                    <Input
-                      placeholder="What needs to be done?"
-                      onPressEnter={(prop) => AddItem(prop.target.value)} />
+                <Col span={22}>
 
-                  </Space>
+                  <Input
+                    id={'task'}
+                    value={tarefaAtual}
+                    placeholder="What needs to be done?"
+                    onChange={(e) => {
+                      setTarefaAtual(e.target.value);
+                    }}
+                    onPressEnter={(prop) => {
+
+                      setItem([...lista, {
+                        id: idAtual,
+                        edit: false,
+                        completed: false,
+                        description: tarefaAtual
+                      }]);
+
+                      idAtual++;
+
+                      setTarefaAtual('')
+                    }} />
 
                 </Col>
 
@@ -121,17 +103,18 @@ export default function Home() {
 
             }
             footer={
-              <Col span={24} offset={2}>
+
+              <Col span={20} offset={4}>
 
                 <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
 
                   <Button style={{ border: 0 }}>
-                    2 items left
+                    {lista.length} items left
                   </Button>
 
                   <Space>
 
-                    <Radio.Group value={'large'} onChange={(prop) => console.log('alteração do radio -> ', prop.target)}>
+                    <Radio.Group value={'large'}>
 
                       <Radio.Button value="all"
                         style={selected === 'all' ? selectedStyle : unselectedStyle}
@@ -159,7 +142,7 @@ export default function Home() {
                   </Space>
 
                   <Button>
-                    Clear completed
+                    Clear completed (hardcode)
                   </Button>
 
                 </Space>
@@ -167,19 +150,93 @@ export default function Home() {
               </Col>
             }
             bordered
-            dataSource={data}
+            dataSource={lista}
             renderItem={item => (
-              <List.Item>
-                {item}
 
-                <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
-                  <EditOutlined style={{ color: Colors.Azul }} />
-                </Button>
+              <Row>
 
-                <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
-                  <DeleteOutlined style={{ color: '#fff' }} />
-                </Button>
-              </List.Item>
+                <List.Item>
+
+                  {console.log('item da lista -> ', item)}
+
+                  <Space>
+
+                    <Checkbox key={item.id} onChange={(e) => {
+
+                      item.completed = !item.completed;
+                      console.log('item atual -> ', item);
+
+                      let itensRestantes = lista.filter(x => x.id !== item.id);
+                      console.log('itens restantes -> ', itensRestantes);
+
+                      itensRestantes.push(item);
+
+                      setItem(itensRestantes)
+                    }} />
+
+                    <Col span={24} style={{ backgroundColor: 'red' }}>
+                      {
+                        item.edit === true ?
+
+                          <Input
+                            value={item.description}
+                            onChange={(e) => {
+                              item.description = e.target.value;
+                              console.log('valor ->', e.target.value);
+                            }}
+                            placeholder="Edição"
+                            onPressEnter={(prop) => {
+                              let valor = prop.target.value;
+                              console.log('valor digitado -> ', valor);
+                            }} />
+
+                          :
+
+                          item.description + ' - Completado: ' + item.completed.toString()
+                      }
+                    </Col>
+
+                  </Space>
+
+                  {
+                    item.edit === false ?
+
+                      <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
+
+                        <EditOutlined
+                          style={{ color: Colors.Azul }}
+                          onClick={() => {
+                            item.edit = !item.edit;
+                            console.log('item atual -> ', item);
+
+                            let itensRestantes = lista.filter(x => x.id !== item.id);
+                            console.log('itens restantes -> ', itensRestantes);
+
+                            itensRestantes.push(item);
+
+                            setItem(itensRestantes)
+                          }} />
+
+                      </Button>
+
+                      : null
+                  }
+
+                  <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
+                    
+                    <DeleteOutlined 
+                      style={{ color: '#fff' }} 
+                      onClick={() => {
+                        let itensRestantes = lista.filter(x => x.id !== item.id);
+                        setItem(itensRestantes);
+                      }} />
+
+                  </Button>
+
+                </List.Item>
+
+              </Row>
+
             )} />
 
         </Col>
