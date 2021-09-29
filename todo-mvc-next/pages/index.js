@@ -1,3 +1,6 @@
+// React
+import React from 'react'
+
 // AntDesign
 import { Row, Col, Image, Button, Input, Space, Divider, Radio, List, Checkbox } from 'antd';
 import { HeartTwoTone, DeleteOutlined, ScheduleOutlined, EditOutlined } from '@ant-design/icons';
@@ -5,53 +8,177 @@ import { HeartTwoTone, DeleteOutlined, ScheduleOutlined, EditOutlined } from '@a
 // Estilos
 import { selectedStyle, unselectedStyle } from '../Enums/estilos'
 
+import { observer } from 'mobx-react'
+
 // Next
 import Link from 'next/link'
 
 // Enums
 import { Colors } from '../Enums/enums';
 
-// React
-import { useState } from 'react';
+// Models
+import { ListOfTodoItem, ToDoItem } from '../models/todo';
+import { FilterOption, Task } from '../models/list'
 
-const onSelectChange = selectedRowKeys => {
-  console.log('selectedRowKeys changed: ', selectedRowKeys);
-  // this.setState({ selectedRowKeys });
-};
+let idAtual = 1;
 
-let idAtual = 0;
+export const renderHeaderList = () => {
 
-const sortItemsByFilter = (items, filter) => {
+  return (
 
-  console.log('itens da lista -> ', items);
-  console.log('filtro -> ', filter);
+    <Row>
 
-  if (filter === 'active') {
-    let itensFiltrados = items.filter(x => x.completed === false);
-    return itensFiltrados.sort((a, b) => a.id - b.id);
-  }
-  else if (filter === 'completed') {
-    let itensFiltrados = items.filter(x => x.completed === true);
-    return itensFiltrados.sort((a, b) => a.id - b.id);
-  }
-  else {
-    return items.sort((a, b) => a.id - b.id);
-  }
+      <Col span={2}>
+
+        <Button style={{ border: 0, height: 25, borderColor: 'transparent' }}>
+          <ScheduleOutlined style={{ color: Colors.Azul_Claro, fontSize: 22 }} />
+        </Button>
+
+      </Col>
+
+      <Col span={22}>
+
+        <Input
+          id={'task'}
+          value={Task.getText}
+          placeholder="What needs to be done?"
+          onChange={(e) => { Task.setTask(e.target.value) }}
+          onPressEnter={(prop) => {
+
+            ListOfTodoItem.addItem({
+              id: idAtual,
+              completed: false,
+              description: Task.getText,
+              edit: false
+            });
+
+            idAtual = idAtual + 1;
+
+            Task.setTask('');
+          }} />
+
+      </Col>
+
+    </Row>
+  )
+}
+
+export const renderItemList = (item) => {
+
+  return (
+
+    <Row>
+
+      <List.Item>
+
+        <Space>
+
+          <Checkbox
+            key={item.id}
+            onChange={(e) => { }} />
+
+          <Col span={24}>
+            {
+              item.edit === true ?
+
+                <Input
+                  value={item.description}
+                  onChange={(e) => { }}
+                  placeholder="Edição"
+                  onPressEnter={(prop) => { }} />
+
+                :
+
+                item.description + ' - Completado: ' + item.completed.toString()
+            }
+          </Col>
+
+        </Space>
+
+        {
+          item.edit === false ?
+
+            <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
+
+              <EditOutlined
+                style={{ color: Colors.Azul }}
+                onClick={() => { }} />
+
+            </Button>
+
+            : null
+        }
+
+        <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
+
+          <DeleteOutlined
+            style={{ color: '#fff' }}
+            onClick={() => { }} />
+
+        </Button>
+
+      </List.Item>
+
+    </Row>
+  )
 
 }
 
-export default function Home() {
+export const renderFooterList = () => {
 
-  const [selected, setSelected] = useState('all');
-  const [tarefaAtual, setTarefaAtual] = useState('');
-  const [lista, setItem] = useState([]);
-  const [copyList, setCopyList] = useState([]);
-  const [empty, setEmpty] = useState('');
+  return (
 
-  const rowSelection = {
-    // selectedRowKeys,
-    onChange: onSelectChange,
-  };
+    <Col span={20} offset={4}>
+
+      <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
+
+        <Button style={{ border: 0 }}>
+          {ListOfTodoItem.totalItems} items left
+        </Button>
+
+        <Space>
+
+          <Radio.Group value={'large'}>
+
+            <Radio.Button value="all"
+              style={FilterOption.getSelectedOption === 'all' ? selectedStyle : unselectedStyle}
+              onClick={() => { FilterOption.setSelectedOption('all') }}>
+
+              All
+            </Radio.Button>
+
+            <Radio.Button
+              value="active"
+              style={FilterOption.getSelectedOption === 'active' ? selectedStyle : unselectedStyle}
+              onClick={() => { FilterOption.setSelectedOption('active') }}>
+
+              Active
+            </Radio.Button>
+
+            <Radio.Button value="completed"
+              style={FilterOption.getSelectedOption === 'completed' ? selectedStyle : unselectedStyle}
+              onClick={() => { FilterOption.setSelectedOption('completed') }}>
+
+              Completed
+            </Radio.Button>
+
+          </Radio.Group>
+
+        </Space>
+
+        <Button
+          onClick={() => { }}>
+          Clear completed
+        </Button>
+
+      </Space>
+
+    </Col>
+  )
+
+}
+
+function Home() {
 
   return (
 
@@ -61,12 +188,7 @@ export default function Home() {
         <Row>
 
           <Col span={2} offset={7} style={{ marginTop: 50 }}>
-
-            <Image
-              width={150}
-              height={150}
-              src={'/todo.png'} />
-
+            <Image width={150} height={150} src={'/todo.png'} />
           </Col>
 
           <Col span={8} offset={1}>
@@ -82,193 +204,11 @@ export default function Home() {
         <Col span={15} offset={4} style={{ top: 20 }}>
 
           <List
-            header={
-
-              <Row>
-
-                <Col span={2}>
-
-                  <Button style={{ border: 0, height: 25, borderColor: 'transparent' }}>
-                    <ScheduleOutlined style={{ color: Colors.Azul_Claro, fontSize: 22 }} />
-                  </Button>
-
-                </Col>
-
-                <Col span={22}>
-
-                  <Input
-                    id={'task'}
-                    value={tarefaAtual}
-                    placeholder="What needs to be done?"
-                    onChange={(e) => {
-                      setTarefaAtual(e.target.value);
-                    }}
-                    onPressEnter={(prop) => {
-
-                      setItem([...lista, {
-                        id: idAtual,
-                        edit: false,
-                        completed: false,
-                        description: tarefaAtual
-                      }]);
-
-                      idAtual++;
-
-                      setTarefaAtual('')
-                    }} />
-
-                </Col>
-
-              </Row>
-
-            }
-            footer={
-
-              <Col span={20} offset={4}>
-
-                <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
-
-                  <Button style={{ border: 0 }}>
-                    {lista.length} items left
-                  </Button>
-
-                  <Space>
-
-                    <Radio.Group value={'large'}>
-
-                      <Radio.Button value="all"
-                        style={selected === 'all' ? selectedStyle : unselectedStyle}
-                        onClick={() => {
-                          setSelected('all')
-                          setItem(sortItemsByFilter(copyList, 'all'))
-                        }}>
-
-                        All
-                      </Radio.Button>
-
-                      <Radio.Button value="active"
-                        style={selected === 'active' ? selectedStyle : unselectedStyle}
-                        onClick={() => {
-                          setSelected('active')
-                          setItem(sortItemsByFilter(lista, 'active'))
-                        }}>
-
-                        Active
-                      </Radio.Button>
-
-                      <Radio.Button value="completed"
-                        style={selected === 'completed' ? selectedStyle : unselectedStyle}
-                        onClick={() => {
-                          setSelected('completed')
-                          setItem(sortItemsByFilter(lista, 'completed'))
-                        }}>
-
-                        Completed
-                      </Radio.Button>
-
-                    </Radio.Group>
-
-                  </Space>
-
-                  <Button>
-                    Clear completed (hardcode)
-                  </Button>
-
-                </Space>
-
-              </Col>
-            }
             bordered
-            dataSource={lista}
-            renderItem={item => (
-
-              <Row>
-
-                <List.Item>
-
-                  {console.log('item da lista -> ', item)}
-
-                  <Space>
-
-                    <Checkbox
-                      key={item.id}
-                      onChange={(e) => {
-
-                        item.completed = !item.completed;
-                        console.log('item atual -> ', item);
-
-                        let itensRestantes = lista.filter(x => x.id !== item.id);
-                        console.log('itens restantes -> ', itensRestantes);
-
-                        itensRestantes.push(item);
-
-                        setItem(sortItemsByFilter(itensRestantes, selected))
-                        setCopyList(itensRestantes)
-                      }} />
-
-                    <Col span={24}>
-                      {
-                        item.edit === true ?
-
-                          <Input
-                            value={item.description}
-                            onChange={(e) => {
-                              item.description = e.target.value;
-                              console.log('valor ->', e.target.value);
-                            }}
-                            placeholder="Edição"
-                            onPressEnter={(prop) => {
-                              let valor = prop.target.value;
-                              console.log('valor digitado -> ', valor);
-                            }} />
-
-                          :
-
-                          item.description + ' - Completado: ' + item.completed.toString()
-                      }
-                    </Col>
-
-                  </Space>
-
-                  {
-                    item.edit === false ?
-
-                      <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
-
-                        <EditOutlined
-                          style={{ color: Colors.Azul }}
-                          onClick={() => {
-
-                            item.edit = !item.edit;
-                            let itensRestantes = lista.filter(x => x.id !== item.id);
-
-                            itensRestantes.push(item);
-                            setItem(itensRestantes)
-                            setCopyList(itensRestantes)
-                          }} />
-
-                      </Button>
-
-                      : null
-                  }
-
-                  <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
-
-                    <DeleteOutlined
-                      style={{ color: '#fff' }}
-                      onClick={() => {
-                        let itensRestantes = lista.filter(x => x.id !== item.id);
-                        setItem(itensRestantes);
-                        setCopyList(itensRestantes)
-                      }} />
-
-                  </Button>
-
-                </List.Item>
-
-              </Row>
-
-            )} />
+            dataSource={ListOfTodoItem.items}
+            header={renderHeaderList()}
+            footer={renderFooterList()}
+            renderItem={item => renderItemList(item)} />
 
         </Col>
 
@@ -289,3 +229,5 @@ export default function Home() {
     </>
   )
 }
+
+export default observer(Home);
