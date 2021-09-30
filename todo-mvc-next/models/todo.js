@@ -11,14 +11,14 @@ export const ToDoItem = types.model({
     * @param id Identificador da tarefa
     * @type number
     */
-    id: types.number,
+    id: types.optional(types.number, 0),
     
     /**
      * @param completed Indica se o item foi concluído
      * @type boolean
      */
+    completed: types.optional(types.boolean, false),
 
-    completed: types.boolean,
     /**
      * @param description Descrição da tarefa
      * @type string
@@ -29,7 +29,7 @@ export const ToDoItem = types.model({
      * @param edit Indica se o item está sendo editado ou não
      * @type boolean
      */
-    edit: types.boolean
+    edit: types.optional(types.boolean, false)
 })
 .actions(self => ({
 

@@ -1,11 +1,15 @@
 import { ToDoItem, ListOfTodoItem } from './todo'
 
+/**
+ * Primeiro teste
+ */
 it('Validação do objeto ', () => {
 
     const item = ToDoItem.create({
         id: 0,
         completed: false,
-        description: ''
+        description: '',
+        edit: false
     })
 
     // Criação do item deve ser igual ao informado no teste a seguir
@@ -18,30 +22,30 @@ it('Validação do objeto ', () => {
     expect(item.description).toBe('Fabio')
 })
 
+/**
+ * Segundo teste
+ */
 it('Cria uma lista de itens', () => {
-    
-    const list = ListOfTodoItem.create({
-        items: [
-            {
-                id: 0,
-                completed: false,
-                description: ''
-            }
-        ]
-    })
 
-    expect(list.items.length).toBe(1)
-    expect(list.items[0].id).toBe(0)
-
-    list.addItem(
-    {
-        id: 1,
+    ListOfTodoItem.addItem({
+        id: 0,
         completed: false,
-        description: 'Adicionado para o teste'
+        description: '',
+        edit: false
     });
 
-    expect(list.items.length).toBe(2)
-    expect(list.items[1].id).toBe(1)
+    expect(ListOfTodoItem.items.length).toBe(1)
+    expect(ListOfTodoItem.items[0].id).toBe(0)
 
-    expect(list.totalItems).toBe(2)
+    ListOfTodoItem.addItem({
+        id: 1,
+        completed: false,
+        description: 'Adicionado para o teste',
+        edit: false
+    });
+
+    expect(ListOfTodoItem.items.length).toBe(2)
+    expect(ListOfTodoItem.items[1].id).toBe(1)
+
+    expect(ListOfTodoItem.totalItems).toBe(2)
 })

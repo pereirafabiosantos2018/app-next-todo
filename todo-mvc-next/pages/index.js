@@ -8,6 +8,7 @@ import { HeartTwoTone, DeleteOutlined, ScheduleOutlined, EditOutlined } from '@a
 // Estilos
 import { selectedStyle, unselectedStyle } from '../Enums/estilos'
 
+// MobX
 import { observer } from 'mobx-react'
 
 // Next
@@ -17,12 +18,14 @@ import Link from 'next/link'
 import { Colors } from '../Enums/enums';
 
 // Models
-import { ListOfTodoItem, ToDoItem } from '../models/todo';
+import { ListOfTodoItem } from '../models/todo';
 import { FilterOption, Task } from '../models/list'
 
 let idAtual = 1;
 
-export const renderHeaderList = () => {
+const renderHeaderList = () => {
+
+  console.clear();
 
   return (
 
@@ -40,7 +43,7 @@ export const renderHeaderList = () => {
 
         <Input
           id={'task'}
-          value={Task.getText}
+          // value={Task.getText}
           placeholder="What needs to be done?"
           onChange={(e) => { Task.setTask(e.target.value) }}
           onPressEnter={(prop) => {
@@ -63,7 +66,7 @@ export const renderHeaderList = () => {
   )
 }
 
-export const renderItemList = (item) => {
+const renderItemList = (item) => {
 
   return (
 
@@ -83,13 +86,11 @@ export const renderItemList = (item) => {
 
                 <Input
                   value={item.description}
-                  onChange={(e) => { }}
-                  placeholder="Edição"
-                  onPressEnter={(prop) => { }} />
+                  placeholder="Edição" />
 
                 :
 
-                item.description + ' - Completado: ' + item.completed.toString()
+                item.description
             }
           </Col>
 
@@ -100,9 +101,7 @@ export const renderItemList = (item) => {
 
             <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
 
-              <EditOutlined
-                style={{ color: Colors.Azul }}
-                onClick={() => { }} />
+              <EditOutlined style={{ color: Colors.Azul }} />
 
             </Button>
 
@@ -111,9 +110,7 @@ export const renderItemList = (item) => {
 
         <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
 
-          <DeleteOutlined
-            style={{ color: '#fff' }}
-            onClick={() => { }} />
+          <DeleteOutlined style={{ color: '#fff' }} />
 
         </Button>
 
@@ -124,7 +121,7 @@ export const renderItemList = (item) => {
 
 }
 
-export const renderFooterList = () => {
+const renderFooterList = () => {
 
   return (
 
@@ -166,10 +163,7 @@ export const renderFooterList = () => {
 
         </Space>
 
-        <Button
-          onClick={() => { }}>
-          Clear completed
-        </Button>
+        <Button>Clear completed</Button>
 
       </Space>
 

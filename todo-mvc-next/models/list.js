@@ -5,10 +5,12 @@ export const Task = types.model({
     text: types.optional(types.string, '')
 })
 .actions(self => ({
+
     setTask(updatedText) {
         console.log('texto atualizado -> ', updatedText)
         self.text = updatedText;
     }
+    
 }))
 .views(self => ({
 
@@ -33,12 +35,12 @@ export const FilterOption = types.model({
         console.log('opção selecionada -> ', selectedOption);
         self.selected = selectedOption;
     }
+
 }))
 .views(self => ({
 
     /**
      * Obtém a opção selecionada
-     * @kind View
      */
     get getSelectedOption() {
         console.log('opção selecionada obtida -> ', self.selected)
