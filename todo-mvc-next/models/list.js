@@ -1,3 +1,5 @@
+//@ts-check
+
 // MobX
 import { types } from "mobx-state-tree";
 
@@ -10,7 +12,7 @@ export const Task = types.model({
         console.log('texto atualizado -> ', updatedText)
         self.text = updatedText;
     }
-    
+
 }))
 .views(self => ({
 

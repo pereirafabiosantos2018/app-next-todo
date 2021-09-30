@@ -89,20 +89,24 @@ export const ListOfTodoItem = types.model({
      * Obtém a quantidade total de itens na lista
      */
     get totalItems() {
-        return self.items.length;
+        return self.items.filter(x => x.completed === false).length;
     },
 
     /**
      * Obtém todos os itens
      */
     get getAllItems() {
-        return self.items;
+        console.clear()
+        console.log('todos os itens -> ', self.items)
+        return self.items.filter(x => x);
     },
 
     /**
      * Obtém todos os itens que estão ativos
      */
     get getActiveItems() {
+        console.clear()
+        console.log('itens ativos -> ', self.items.filter(x => x.completed === false))
         return self.items.filter(x => x.completed === false);
     },
 
@@ -110,6 +114,8 @@ export const ListOfTodoItem = types.model({
      * Obtém todos os itens que foram concluídos
      */
     get getCompletedItems() {
+        console.clear()
+        console.log('itens finalizados -> ', self.items.filter(x => x.completed === true))
         return self.items.filter(x => x.completed === true);
     }
 

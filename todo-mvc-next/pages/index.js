@@ -2,9 +2,9 @@
 import React from 'react'
 
 // AntDesign
-import { Row, Col, Image, Button, Input, Space, Divider, Radio, List, Checkbox } from 'antd';
+import { Row, Col, Image, Button, Input, Space, Divider, Radio, List, Checkbox, Typography } from 'antd';
 import { HeartTwoTone, DeleteOutlined, ScheduleOutlined, EditOutlined } from '@ant-design/icons';
-
+ 
 // Estilos
 import { selectedStyle, unselectedStyle } from '../Enums/estilos'
 
@@ -23,9 +23,9 @@ import { FilterOption, Task } from '../models/list'
 
 let idAtual = 1;
 
-const renderHeaderList = () => {
+const { Text } = Typography;
 
-  console.clear();
+const renderHeaderList = () => {
 
   return (
 
@@ -43,7 +43,7 @@ const renderHeaderList = () => {
 
         <Input
           id={'task'}
-          // value={Task.getText}
+          value={Task.getText}
           placeholder="What needs to be done?"
           onChange={(e) => { Task.setTask(e.target.value) }}
           onPressEnter={(prop) => {
@@ -76,9 +76,11 @@ const renderItemList = (item) => {
 
         <Space>
 
-          <Checkbox
-            key={item.id}
-            onChange={(e) => { }} />
+          {/* Altera o status da tarefa */}
+          <Checkbox 
+            checked={item.completed}
+            key={item.id} 
+            onChange={(e) => { item.changeCompleted() }} />
 
           <Col span={24}>
             {
@@ -90,7 +92,12 @@ const renderItemList = (item) => {
 
                 :
 
-                item.description
+                item.completed === true ?
+
+                  <Text delete>{item.description}</Text>
+                    :
+                  <Text>{item.description}</Text>
+                
             }
           </Col>
 
@@ -199,7 +206,17 @@ function Home() {
 
           <List
             bordered
-            dataSource={ListOfTodoItem.items}
+            dataSource={
+            
+              FilterOption.getSelectedOption === 'completed' ?
+                ListOfTodoItem.getCompletedItems
+              :
+              FilterOption.getSelectedOption === 'active' ?
+                ListOfTodoItem.getActiveItems
+              :
+                ListOfTodoItem.getAllItems
+
+            }
             header={renderHeaderList()}
             footer={renderFooterList()}
             renderItem={item => renderItemList(item)} />

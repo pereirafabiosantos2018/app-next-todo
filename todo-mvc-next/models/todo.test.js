@@ -43,7 +43,7 @@ it('Cria uma lista de itens', () => {
         description: 'Adicionado para o teste',
         edit: false
     });
-
+ 
     expect(ListOfTodoItem.items.length).toBe(2)
     expect(ListOfTodoItem.items[1].id).toBe(1)
 
