@@ -8,6 +8,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 // Enums
 import { Colors } from '../Enums/enums'
+import { ListOfTodoItem } from '../models/todo';
 
 const { Text } = Typography;
 
@@ -60,7 +61,10 @@ function ListItem({ item }) {
                         : null
                 }
 
-                <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
+                <Button 
+                    ghost
+                    style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} 
+                    onClick={() => ListOfTodoItem.deleteItem(item)}>
 
                     <DeleteOutlined style={{ color: '#fff' }} />
 
