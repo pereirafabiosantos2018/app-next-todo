@@ -3,7 +3,7 @@ import React from 'react'
 import { observer } from 'mobx-react-lite'
 
 // AntDesign
-import { Row, Col, Space, Checkbox, List, Button, Typography, Input } from 'antd'
+import { Row, Col, Checkbox, List, Button, Typography, Input } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 // Enums

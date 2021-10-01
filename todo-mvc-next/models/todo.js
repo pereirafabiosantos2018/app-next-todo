@@ -38,7 +38,6 @@ export const ToDoItem = types.model({
      * @param {string} updatedTaskText O novo texto da tarefa
      */
     changeDescription(updatedTaskText) {
-        console.log('texto alterado para -> ', updatedTaskText);
         self.description = updatedTaskText;
     },
 

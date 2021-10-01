@@ -1,5 +1,6 @@
 // React
 import React from 'react'
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 
 // Componentes
 import PageHeader from '../components/page/page-header';
