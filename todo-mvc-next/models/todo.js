@@ -89,6 +89,16 @@ export const ListOfTodoItem = types.model({
         self.items.forEach(item => {
             item.completed = !item.completed;
         })
+    },
+
+    removeCompletedTasks() {
+        
+        let itensRemover = self.items.filter(x => x.completed === true);
+
+        itensRemover.forEach(item => {
+            this.deleteItem(item);
+        })
+
     }
 
 }))

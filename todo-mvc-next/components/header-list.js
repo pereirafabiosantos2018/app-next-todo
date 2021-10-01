@@ -27,6 +27,7 @@ function HeaderList() {
             onClick={() => ListOfTodoItem.markAllDone() }>
 
             <ScheduleOutlined style={{ color: Colors.Azul_Claro, fontSize: 22 }} />
+
           </Button>
   
         </Col>

@@ -54,7 +54,10 @@ function FooterList() {
 
                 </Space>
 
-                <Button>Clear completed</Button>
+                <Button
+                    onClick={() => ListOfTodoItem.removeCompletedTasks()}>
+                    Clear completed
+                </Button>
 
             </Space>
 

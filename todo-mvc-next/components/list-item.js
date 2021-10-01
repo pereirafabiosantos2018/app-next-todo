@@ -50,7 +50,7 @@ function ListItem({ item }) {
                 </Space>
 
                 {
-                    item.edit === false ?
+                    item.edit === false && item.completed === false ?
 
                         <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
 
