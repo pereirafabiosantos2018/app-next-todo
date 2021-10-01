@@ -147,6 +147,13 @@ export const ListOfTodoItem = types.model({
         console.clear()
         console.log('itens finalizados -> ', self.items.filter(x => x.completed === true))
         return self.items.filter(x => x.completed === true);
+    },
+
+    /**
+     * Retorna um booleano indicando se existe itens finalizados
+     */
+    get hasCompletedItems() {
+        return self.items.filter(x => x.completed === true).length > 0;
     }
 
 }))
