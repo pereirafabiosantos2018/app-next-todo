@@ -22,7 +22,10 @@ function HeaderList() {
   
         <Col span={2}>
   
-          <Button style={{ border: 0, height: 25, borderColor: 'transparent' }}>
+          <Button 
+            style={{ border: 0, height: 25, borderColor: 'transparent' }}
+            onClick={() => ListOfTodoItem.markAllDone() }>
+
             <ScheduleOutlined style={{ color: Colors.Azul_Claro, fontSize: 22 }} />
           </Button>
   

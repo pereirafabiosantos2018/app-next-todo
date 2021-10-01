@@ -80,6 +80,15 @@ export const ListOfTodoItem = types.model({
      */
     deleteItem(item) {
         self.items.remove(item);
+    },
+
+    /**
+     * Marca todos os itens como concluidos
+     */
+    markAllDone() {
+        self.items.forEach(item => {
+            item.completed = !item.completed;
+        })
     }
 
 }))
