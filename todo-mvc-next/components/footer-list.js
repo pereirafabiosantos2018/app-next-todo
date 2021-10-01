@@ -21,7 +21,7 @@ function FooterList() {
             <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
 
                 <Button style={{ border: 0 }}>
-                    {ListOfTodoItem.totalItems} items left
+                    {ListOfTodoItem.totalItems}
                 </Button>
 
                 <Space>

@@ -89,7 +89,18 @@ export const ListOfTodoItem = types.model({
      * Obtém a quantidade total de itens na lista
      */
     get totalItems() {
-        return self.items.filter(x => x.completed === false).length;
+
+        let items = self.items.filter(x => x.completed === false).length;
+        
+        if (items === 0) {
+            return 'Nothing to do';
+        }
+        else if (items === 1) {
+            return '1 item left';
+        }
+        else {
+            return items + ' items left';
+        }
     },
 
     /**
