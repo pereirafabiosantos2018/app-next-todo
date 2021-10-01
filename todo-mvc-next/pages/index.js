@@ -1,204 +1,30 @@
 // React
 import React from 'react'
 
+// Componentes
+import HeaderList from '../components/header-list'
+import FooterList from '../components/footer-list';
+import PageHeader from '../components/page-header';
+import PageFooter from '../components/page-footer';
+import ListItem from '../components/list-item'
+
 // AntDesign
-import { Row, Col, Image, Button, Input, Space, Divider, Radio, List, Checkbox, Typography } from 'antd';
-import { HeartTwoTone, DeleteOutlined, ScheduleOutlined, EditOutlined } from '@ant-design/icons';
- 
-// Estilos
-import { selectedStyle, unselectedStyle } from '../Enums/estilos'
+import { Row, Col, List } from 'antd';
 
 // MobX
 import { observer } from 'mobx-react'
 
-// Next
-import Link from 'next/link'
-
-// Enums
-import { Colors } from '../Enums/enums';
-
 // Models
 import { ListOfTodoItem } from '../models/todo';
-import { FilterOption, Task } from '../models/list'
-
-let idAtual = 1;
-
-const { Text } = Typography;
-
-const renderHeaderList = () => {
-
-  return (
-
-    <Row>
-
-      <Col span={2}>
-
-        <Button style={{ border: 0, height: 25, borderColor: 'transparent' }}>
-          <ScheduleOutlined style={{ color: Colors.Azul_Claro, fontSize: 22 }} />
-        </Button>
-
-      </Col>
-
-      <Col span={22}>
-
-        <Input
-          id={'task'}
-          value={Task.getText}
-          placeholder="What needs to be done?"
-          onChange={(e) => { Task.setTask(e.target.value) }}
-          onPressEnter={(prop) => {
-
-            ListOfTodoItem.addItem({
-              id: idAtual,
-              completed: false,
-              description: Task.getText,
-              edit: false
-            });
-
-            idAtual = idAtual + 1;
-
-            Task.setTask('');
-          }} />
-
-      </Col>
-
-    </Row>
-  )
-}
-
-const renderItemList = (item) => {
-
-  return (
-
-    <Row>
-
-      <List.Item>
-
-        <Space>
-
-          {/* Altera o status da tarefa */}
-          <Checkbox 
-            checked={item.completed}
-            key={item.id} 
-            onChange={(e) => { item.changeCompleted() }} />
-
-          <Col span={24}>
-            {
-              item.edit === true ?
-
-                <Input
-                  value={item.description}
-                  placeholder="Edição" />
-
-                :
-
-                item.completed === true ?
-
-                  <Text delete>{item.description}</Text>
-                    :
-                  <Text>{item.description}</Text>
-                
-            }
-          </Col>
-
-        </Space>
-
-        {
-          item.edit === false ?
-
-            <Button style={{ backgroundColor: '#fff', position: 'absolute', right: 70 }} ghost>
-
-              <EditOutlined style={{ color: Colors.Azul }} />
-
-            </Button>
-
-            : null
-        }
-
-        <Button style={{ backgroundColor: '#ff4d4f', position: 'absolute', right: 20, borderRadius: 5 }} ghost>
-
-          <DeleteOutlined style={{ color: '#fff' }} />
-
-        </Button>
-
-      </List.Item>
-
-    </Row>
-  )
-
-}
-
-const renderFooterList = () => {
-
-  return (
-
-    <Col span={20} offset={4}>
-
-      <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
-
-        <Button style={{ border: 0 }}>
-          {ListOfTodoItem.totalItems} items left
-        </Button>
-
-        <Space>
-
-          <Radio.Group value={'large'}>
-
-            <Radio.Button value="all"
-              style={FilterOption.getSelectedOption === 'all' ? selectedStyle : unselectedStyle}
-              onClick={() => { FilterOption.setSelectedOption('all') }}>
-
-              All
-            </Radio.Button>
-
-            <Radio.Button
-              value="active"
-              style={FilterOption.getSelectedOption === 'active' ? selectedStyle : unselectedStyle}
-              onClick={() => { FilterOption.setSelectedOption('active') }}>
-
-              Active
-            </Radio.Button>
-
-            <Radio.Button value="completed"
-              style={FilterOption.getSelectedOption === 'completed' ? selectedStyle : unselectedStyle}
-              onClick={() => { FilterOption.setSelectedOption('completed') }}>
-
-              Completed
-            </Radio.Button>
-
-          </Radio.Group>
-
-        </Space>
-
-        <Button>Clear completed</Button>
-
-      </Space>
-
-    </Col>
-  )
-
-}
+import { FilterOption } from '../models/list'
 
 function Home() {
 
   return (
 
     <>
-      <div style={{ backgroundColor: '#001529', height: 250, width: '100%' }}>
 
-        <Row>
-
-          <Col span={2} offset={7} style={{ marginTop: 50 }}>
-            <Image width={150} height={150} src={'/todo.png'} />
-          </Col>
-
-          <Col span={8} offset={1}>
-            <p style={{ marginTop: 100, fontSize: 40, color: Colors.Branco }}>Fabin TodoMVC</p>
-          </Col>
-
-        </Row>
-
-      </div>
+      <PageHeader />
 
       <Row>
 
@@ -207,36 +33,26 @@ function Home() {
           <List
             bordered
             dataSource={
-            
+
               FilterOption.getSelectedOption === 'completed' ?
                 ListOfTodoItem.getCompletedItems
-              :
-              FilterOption.getSelectedOption === 'active' ?
-                ListOfTodoItem.getActiveItems
-              :
-                ListOfTodoItem.getAllItems
+                :
+                FilterOption.getSelectedOption === 'active' ?
+                  ListOfTodoItem.getActiveItems
+                  :
+                  ListOfTodoItem.getAllItems
 
             }
-            header={renderHeaderList()}
-            footer={renderFooterList()}
-            renderItem={item => renderItemList(item)} />
+            header={<HeaderList />}
+            footer={<FooterList />}
+            renderItem={x => <ListItem item={x} />} />
 
         </Col>
 
       </Row>
 
-      <Row>
+      <PageFooter />
 
-        <Col span={10} offset={7} style={{ bottom: 20, position: 'absolute' }}>
-          Feito com  <HeartTwoTone twoToneColor="#eb2f96" /> por Fabin Pereira dos Santos. Based on
-
-          <Link href="https://github.com/tastejs/todomvc/blob/master/app-spec.md#functionality">
-            <a target={'_blank'}>{' '} TodoMVC functionality</a>
-          </Link>
-
-        </Col>
-
-      </Row>
     </>
   )
 }
