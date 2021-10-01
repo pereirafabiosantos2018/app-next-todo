@@ -35,6 +35,7 @@ function HeaderList() {
         <Col span={22}>
   
           <Input
+            style={{borderRadius: 5}}
             id={'task'}
             value={Task.getText}
             placeholder="What needs to be done?"

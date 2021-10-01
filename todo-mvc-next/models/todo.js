@@ -47,6 +47,7 @@ export const ToDoItem = types.model({
      */
     changeCompleted() {
         self.completed = !self.completed;
+        self.edit = false;
     },
 
     toggleEdit() {

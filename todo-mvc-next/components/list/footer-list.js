@@ -2,7 +2,7 @@
 import React from 'react'
 
 // AntDesign
-import { Col, Button, Space, Divider, Radio } from 'antd';
+import { Row, Col, Button, Space, Divider, Radio } from 'antd';
 
 // Estilos
 import { selectedStyle, unselectedStyle } from '../../Enums/estilos'
@@ -16,58 +16,61 @@ function FooterList() {
 
     return (
 
-        <Col span={20} offset={4}>
+        <Row>
 
-            <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
+            <Col span={24} offset={7}>
 
-                <Button style={{ border: 0 }}>
-                    {ListOfTodoItem.totalItems}
-                </Button>
+                <Space split={<Divider type="vertical" style={{ height: 20 }} />}>
 
-                <Space>
+                    <Button style={{ border: 0 }}>
+                        {ListOfTodoItem.totalItems}
+                    </Button>
 
-                    <Radio.Group value={'large'}>
+                    <Space>
 
-                        <Radio.Button value="all"
-                            style={FilterOption.getSelectedOption === 'all' ? selectedStyle : unselectedStyle}
-                            onClick={() => { FilterOption.setSelectedOption('all') }}>
+                        <Radio.Group value={'large'}>
 
-                            All
-                        </Radio.Button>
+                            <Radio.Button value="all"
+                                style={FilterOption.getSelectedOption === 'all' ? selectedStyle : unselectedStyle}
+                                onClick={() => { FilterOption.setSelectedOption('all') }}>
 
-                        <Radio.Button
-                            value="active"
-                            style={FilterOption.getSelectedOption === 'active' ? selectedStyle : unselectedStyle}
-                            onClick={() => { FilterOption.setSelectedOption('active') }}>
+                                All
+                            </Radio.Button>
 
-                            Active
-                        </Radio.Button>
+                            <Radio.Button
+                                value="active"
+                                style={FilterOption.getSelectedOption === 'active' ? selectedStyle : unselectedStyle}
+                                onClick={() => { FilterOption.setSelectedOption('active') }}>
 
-                        <Radio.Button value="completed"
-                            style={FilterOption.getSelectedOption === 'completed' ? selectedStyle : unselectedStyle}
-                            onClick={() => { FilterOption.setSelectedOption('completed') }}>
+                                Active
+                            </Radio.Button>
 
-                            Completed
-                        </Radio.Button>
+                            <Radio.Button value="completed"
+                                style={FilterOption.getSelectedOption === 'completed' ? selectedStyle : unselectedStyle}
+                                onClick={() => { FilterOption.setSelectedOption('completed') }}>
 
-                    </Radio.Group>
+                                Completed
+                            </Radio.Button>
+
+                        </Radio.Group>
+
+                    </Space>
+
+                    {
+                        ListOfTodoItem.hasCompletedItems === true ?
+
+                            <Button
+                                onClick={() => ListOfTodoItem.removeCompletedTasks()}>
+                                Clear completed
+                            </Button>
+                            :
+                            null
+                    }
 
                 </Space>
 
-                {
-                    ListOfTodoItem.hasCompletedItems === true ?
-
-                        <Button
-                            onClick={() => ListOfTodoItem.removeCompletedTasks()}>
-                            Clear completed
-                        </Button>
-                    :
-                        null
-                }
-
-            </Space>
-
-        </Col>
+            </Col>
+        </Row>
     )
 }
 
