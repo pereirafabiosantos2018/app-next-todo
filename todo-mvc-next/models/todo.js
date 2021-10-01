@@ -38,6 +38,7 @@ export const ToDoItem = types.model({
      * @param {string} updatedTaskText O novo texto da tarefa
      */
     changeDescription(updatedTaskText) {
+        console.log('texto alterado para -> ', updatedTaskText);
         self.description = updatedTaskText;
     },
 
@@ -46,7 +47,10 @@ export const ToDoItem = types.model({
      */
     changeCompleted() {
         self.completed = !self.completed;
-        console.log('alterei o status para -> ', self.completed)
+    },
+
+    toggleEdit() {
+        self.edit = !self.edit;
     }
 
 }))
@@ -126,8 +130,6 @@ export const ListOfTodoItem = types.model({
      * Obtém todos os itens
      */
     get getAllItems() {
-        console.clear()
-        console.log('todos os itens -> ', self.items)
         return self.items.filter(x => x);
     },
 
@@ -135,8 +137,6 @@ export const ListOfTodoItem = types.model({
      * Obtém todos os itens que estão ativos
      */
     get getActiveItems() {
-        console.clear()
-        console.log('itens ativos -> ', self.items.filter(x => x.completed === false))
         return self.items.filter(x => x.completed === false);
     },
 
@@ -144,8 +144,6 @@ export const ListOfTodoItem = types.model({
      * Obtém todos os itens que foram concluídos
      */
     get getCompletedItems() {
-        console.clear()
-        console.log('itens finalizados -> ', self.items.filter(x => x.completed === true))
         return self.items.filter(x => x.completed === true);
     },
 
