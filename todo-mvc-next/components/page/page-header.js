@@ -5,7 +5,7 @@ import React from 'react'
 import { Image, Row, Col, Typography } from 'antd'
 
 // Enums
-import { Colors } from '../Enums/enums'
+import { Colors } from '../../Enums/enums'
 
 const { Text } = Typography;
 

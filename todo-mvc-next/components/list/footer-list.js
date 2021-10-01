@@ -5,11 +5,11 @@ import React from 'react'
 import { Col, Button, Space, Divider, Radio } from 'antd';
 
 // Estilos
-import { selectedStyle, unselectedStyle } from '../Enums/estilos'
+import { selectedStyle, unselectedStyle } from '../../Enums/estilos'
 
 // Mobx
-import { ListOfTodoItem } from '../models/todo'
-import { FilterOption } from '../models/list'
+import { ListOfTodoItem } from '../../models/todo'
+import { FilterOption } from '../../models/list'
 import { observer } from 'mobx-react-lite';
 
 function FooterList() {

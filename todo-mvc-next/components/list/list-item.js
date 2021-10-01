@@ -7,8 +7,8 @@ import { Row, Col, Space, Checkbox, List, Button, Typography } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 // Enums
-import { Colors } from '../Enums/enums'
-import { ListOfTodoItem } from '../models/todo';
+import { Colors } from '../../Enums/enums'
+import { ListOfTodoItem } from '../../models/todo';
 
 const { Text } = Typography;
 

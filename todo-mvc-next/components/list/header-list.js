@@ -1,15 +1,15 @@
 // React
 import React from 'react'
 
-import { Colors } from '../Enums/enums';
+import { Colors } from '../../Enums/enums';
 
 // AntDesign
 import { Row, Col, Button, Input } from 'antd';
 import { ScheduleOutlined } from '@ant-design/icons';
 
 // Models
-import { ListOfTodoItem } from '../models/todo'
-import { Task } from '../models/list'
+import { ListOfTodoItem } from '../../models/todo'
+import { Task } from '../../models/list'
 import { observer } from 'mobx-react-lite';
 
 let idAtual = 1;
