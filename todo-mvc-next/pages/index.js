@@ -1,6 +1,5 @@
 // React
 import React from 'react'
-import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 
 // Componentes
 import PageHeader from '../components/page/page-header';
@@ -27,12 +26,20 @@ function Home() {
 
       <PageHeader />
 
-      <Row>
+      <Row
+        style={
+          {
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: 20
+          }}>
 
-        <Col span={15} offset={4} style={{ top: 20 }}>
+        <Col span={16}>
 
           <List
-            bordered
+            style={{ minWidth: 580 }}
+            bordered={true}
             dataSource={
 
               FilterOption.getSelectedOption === 'completed' ?
@@ -50,9 +57,9 @@ function Home() {
 
         </Col>
 
-      </Row>
+        <PageFooter />
 
-      <PageFooter />
+      </Row>
 
     </>
   )
