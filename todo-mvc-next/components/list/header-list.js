@@ -48,16 +48,20 @@ function HeaderList() {
           onChange={(e) => { Task.setTask(e.target.value) }}
           onPressEnter={(prop) => {
 
-            ListOfTodoItem.addItem({
-              id: idAtual,
-              completed: false,
-              description: Task.getText,
-              edit: false
-            });
+            if (Task.getText.trim().length > 0) {
 
-            idAtual = idAtual + 1;
+              ListOfTodoItem.addItem({
+                id: idAtual,
+                completed: false,
+                description: Task.getText,
+                edit: false
+              });
 
-            Task.setTask('');
+              idAtual = idAtual + 1;
+
+              Task.setTask('');
+            }
+            
           }} />
 
       </Col>
