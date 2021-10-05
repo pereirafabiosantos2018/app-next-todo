@@ -55,6 +55,7 @@ function ListItem({ item }) {
         <div
             id={item.id}
             draggable={true}
+            onDoubleClick={() => item.toggleEdit()}
             style={
                 {
                     // backgroundColor: up === 0 ? '#fff' : Colors.Azul_Claro,
