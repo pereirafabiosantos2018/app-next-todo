@@ -9,7 +9,6 @@ export const Task = types.model({
 .actions(self => ({
 
     setTask(updatedText) {
-        console.log('texto atualizado -> ', updatedText)
         self.text = updatedText;
     }
 
@@ -17,7 +16,6 @@ export const Task = types.model({
 .views(self => ({
 
     get getText() {
-        console.log('texto retornado -> ', self.text)
         return self.text;
     },
 

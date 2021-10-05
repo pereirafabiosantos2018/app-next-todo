@@ -1,5 +1,6 @@
 // React
-import React from 'react'
+import React, { useEffect } from 'react'
+
 
 // Componentes
 import PageHeader from '../components/page/page-header';
@@ -16,9 +17,28 @@ import { observer } from 'mobx-react'
 
 // Models
 import { ListOfTodoItem } from '../models/todo';
-import { FilterOption } from '../models/list'
+import { onSnapshot, applySnapshot } from 'mobx-state-tree';
 
 function Home() {
+
+  onSnapshot(ListOfTodoItem, (snapshot) => {
+    localStorage.setItem('dados', JSON.stringify(snapshot));
+    console.log('tirou snapshot', snapshot);
+  });
+
+  useEffect(() => {
+    
+    if (localStorage.getItem('dados')) {
+      
+      let items = localStorage.getItem('dados');
+
+      console.log('dados do localstorage -> ', JSON.parse(items))
+      applySnapshot(ListOfTodoItem.items, JSON.parse(items).items);
+    }
+
+  }, [ ]
+    // Evita o loading infinito ao aplicar o snapshot ao modelo atual da árvore
+  );
 
   return (
 
@@ -40,17 +60,7 @@ function Home() {
           <List
             style={{ minWidth: 580 }}
             bordered={true}
-            dataSource={
-
-              FilterOption.getSelectedOption === 'completed' ?
-                ListOfTodoItem.getCompletedItems
-                :
-                FilterOption.getSelectedOption === 'active' ?
-                  ListOfTodoItem.getActiveItems
-                  :
-                  ListOfTodoItem.getAllItems
-
-            }
+            dataSource={ ListOfTodoItem.getListOfToDoDataSource }
             header={<HeaderList />}
             footer={<FooterList />}
             renderItem={x => <ListItem item={x} />} />

@@ -1,12 +1,14 @@
 // MobX
 import { types } from "mobx-state-tree";
 
+import { FilterOption } from '../models/list'
+
 /**
  * Item de lista
  * @author Fabio Pereira dos Santos
  */
 export const ToDoItem = types.model({
-    
+     
     /**
     * @param id Identificador da tarefa
     * @type number
@@ -90,9 +92,11 @@ export const ListOfTodoItem = types.model({
      * Marca todos os itens como concluidos
      */
     markAllDone() {
+
         self.items.forEach(item => {
             item.completed = !item.completed;
         })
+
     },
 
     removeCompletedTasks() {
@@ -124,6 +128,20 @@ export const ListOfTodoItem = types.model({
         else {
             return items + ' items left';
         }
+    },
+
+    get getListOfToDoDataSource() {
+
+        if (FilterOption.getSelectedOption === 'completed') {
+            return ListOfTodoItem.getCompletedItems;
+        }
+        else if (FilterOption.getSelectedOption === 'active') {
+            return ListOfTodoItem.getActiveItems;
+        }
+        else {
+            return ListOfTodoItem.getAllItems;
+        }
+    
     },
 
     /**
