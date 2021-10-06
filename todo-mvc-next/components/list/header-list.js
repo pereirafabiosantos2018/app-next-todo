@@ -12,8 +12,6 @@ import { ListOfTodoItem } from '../../models/todo'
 import { Task } from '../../models/list'
 import { observer } from 'mobx-react-lite';
 
-let idAtual = 1;
-
 function HeaderList() {
 
   return (
@@ -23,7 +21,8 @@ function HeaderList() {
         {
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'flex-start'
+          justifyContent: 'flex-start',
+          marginLeft: 20
         }}>
 
       <Col>
@@ -38,7 +37,7 @@ function HeaderList() {
 
       </Col>
 
-      <Col span={20}>
+      <Col span={21}>
 
         <Input
           style={{ borderRadius: 5 }}
@@ -51,13 +50,12 @@ function HeaderList() {
             if (Task.getText.trim().length > 0) {
 
               ListOfTodoItem.addItem({
-                id: idAtual,
+                id: ListOfTodoItem.getMaxId + 1,
                 completed: false,
                 description: Task.getText,
-                edit: false
+                edit: false,
+                index: ListOfTodoItem.getMaxId
               });
-
-              idAtual = idAtual + 1;
 
               Task.setTask('');
             }

@@ -31,7 +31,12 @@ export const ToDoItem = types.model({
      * @param edit Indica se o item está sendo editado ou não
      * @type boolean
      */
-    edit: types.optional(types.boolean, false)
+    edit: types.optional(types.boolean, false),
+
+    /**
+     * @param index Indica qual a posição do item na lista
+     */
+    index: types.optional(types.number, 0)
 })
 .actions(self => ({
 
@@ -170,6 +175,22 @@ export const ListOfTodoItem = types.model({
      */
     get hasCompletedItems() {
         return self.items.filter(x => x.completed === true).length > 0;
+    },
+
+    /**
+     * Retorna o maior valor de id dos itens gravados
+     */
+    get getMaxId() {
+
+        let maxId = 0;
+
+        self.items.forEach(x => {
+            if (x.id > maxId) {
+                maxId = x.id
+            }
+        })
+
+        return maxId;
     }
 
 }))

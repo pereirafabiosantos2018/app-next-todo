@@ -1,7 +1,6 @@
 // React
 import React, { useEffect } from 'react'
 
-
 // Componentes
 import PageHeader from '../components/page/page-header';
 import PageFooter from '../components/page/page-footer';
@@ -27,16 +26,16 @@ function Home() {
   });
 
   useEffect(() => {
-    
+
     if (localStorage.getItem('dados')) {
-      
+
       let items = localStorage.getItem('dados');
 
       console.log('dados do localstorage -> ', JSON.parse(items))
       applySnapshot(ListOfTodoItem.items, JSON.parse(items).items);
     }
 
-  }, [ ]
+  }, []
     // Evita o loading infinito ao aplicar o snapshot ao modelo atual da árvore
   );
 
@@ -60,7 +59,7 @@ function Home() {
           <List
             style={{ minWidth: 580 }}
             bordered={true}
-            dataSource={ ListOfTodoItem.getListOfToDoDataSource }
+            dataSource={ListOfTodoItem.getListOfToDoDataSource}
             header={<HeaderList />}
             footer={<FooterList />}
             renderItem={x => <ListItem item={x} />} />

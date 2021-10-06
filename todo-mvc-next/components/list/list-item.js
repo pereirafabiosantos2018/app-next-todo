@@ -10,14 +10,18 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Colors } from '../../Enums/enums'
 import { ListOfTodoItem } from '../../models/todo';
 
+import { arrayMoveImmutable } from 'array-move';
+import { applySnapshot } from 'mobx-state-tree';
+
 const { Text } = Typography;
 
-const renderInput = (item) => {
+const renderInput = (item, up) => {
 
     if (item.edit === true && item.completed === false) {
 
         return (
             <Input
+                id={item.index}
                 style={{ borderRadius: 5 }}
                 value={item.description}
                 placeholder="Edição"
@@ -26,122 +30,150 @@ const renderInput = (item) => {
         )
     }
     else if (item.edit === false && item.completed === true) {
-        return <Text delete>{item.description}</Text>
+        return <Text id={item.index} delete>{item.description}</Text>
     }
     else {
-        return <Text>{item.description}</Text>
+        return <Text style={{ color: up === true ? Colors.Branco : 'black' }} id={item.index}>{item.description}</Text>
     }
 }
 
-const onDrag = (event, dados) => {
-    event.dataTransfer.setData("text", event.target.id);
-    console.log('gravando os dados no onDrag...', event.target.id);
-}
-
-
-const onDrop = (event) => {
-
-    event.preventDefault();
-    var data = event.dataTransfer.getData("text");
-    console.log('dado obtido no onDrop -> ', data);
-}
+let newIndex = 0;
+let indiceItemMovendo = 0;
 
 function ListItem({ item }) {
 
-    const [up, setUp] = useState(0);
+    const [isMovingElement, setIsMovingElement] = useState(false);
+    const [array, setArray] = useState(ListOfTodoItem.items);
 
     return (
 
-        <div
-            id={item.id}
-            draggable={true}
-            onDoubleClick={() => item.toggleEdit()}
-            style={
-                {
-                    // backgroundColor: up === 0 ? '#fff' : Colors.Azul_Claro,
-                    // borderRadius: 5,
-                    // marginLeft: up === 0 ? 0 : 25,
-                    // width: up === 0 ? '100%' : '95%',
-                    cursor: 'grab'
+        <>
+            <div
+                id={item.index}
+                key={item.index}
+                draggable={true}
+                onDoubleClick={() => item.toggleEdit()}
+                onDragStart={(event) => {
+                    setIsMovingElement(true);
+
+                    console.log('item que arrastei', event.target)
+                    indiceItemMovendo = event.target.id;
                 }}
-            onDragStart={(event) => {
-                setUp(1);
-                onDrag(event, item); // Salva os dados que estão sendo movidos
-            }}
-            onDragOver={(event) => {
-                event.preventDefault(); // "Desabilita" a manipulação padrão do elemento
-                console.log('só passando, rs ->', event);
-            }}
-            onDrop={(event) => {
-                setUp(0);
-                onDrop(event);
-            }}>
+                onDragOver={(event) => {
+                    newIndex = parseInt(event.target.id);
+                    console.log('movendo item para o indice ', newIndex);
+                }}
+                onDragEnd={() => {
 
-            <List.Item
-                key={item.id}
-                actions={
-                    [
-                        item.edit === false && item.completed === false ?
+                    setIsMovingElement(false);
 
+                    let i = 0;
+
+                    let arrayTemp = array.map(x => {
+                        return {
+                            id: x.id,
+                            index: x.index,
+                            completed: x.completed,
+                            description: x.description,
+                            edit: x.edit
+                        }
+                    });
+
+                    // Reordena o array
+                    let newArray = arrayMoveImmutable(arrayTemp, indiceItemMovendo, newIndex);
+
+                    // Arrumo o indice
+                    newArray.forEach(x => x.index = i++);
+
+                    // Aplica no estado
+                    applySnapshot(ListOfTodoItem.items, newArray);
+                }}
+                style={
+                    {
+                        backgroundColor: isMovingElement === true ? Colors.Azul_Claro : '#fff',
+                        borderRadius: 5,
+                        marginLeft: isMovingElement === true ? 0 : 25,
+                        width: isMovingElement === true ? '100%' : '95%',
+                        cursor: 'grab'
+                    }}>
+
+                <List.Item
+                    id={item.index}
+                    key={item.id}
+                    actions={
+                        [
+                            item.edit === false && item.completed === false ?
+
+                                <Button
+                                    id={item.index}
+                                    style={{ borderColor: Colors.Azul_Claro }}
+                                    onClick={() => item.toggleEdit()}>
+
+                                    <EditOutlined
+                                        id={item.index}
+                                        style={{ color: Colors.Azul }} />
+
+                                </Button>
+
+                                : null
+                            ,
                             <Button
-                                style={{ borderColor: Colors.Azul_Claro }}
-                                onClick={() => item.toggleEdit()}>
+                                ghost
+                                id={item.index}
+                                style={{ backgroundColor: '#ff4d4f', borderRadius: 5 }}
+                                onClick={() => ListOfTodoItem.deleteItem(item)}>
 
-                                <EditOutlined style={{ color: Colors.Azul }} />
+                                <DeleteOutlined style={{ color: '#fff' }} />
 
                             </Button>
+                        ]
+                    }>
 
-                            : null
-                        ,
-                        <Button
-                            ghost
-                            style={{ backgroundColor: '#ff4d4f', borderRadius: 5 }}
-                            onClick={() => ListOfTodoItem.deleteItem(item)}>
+                    <List.Item.Meta
+                        id={item.index}
+                        title={
 
-                            <DeleteOutlined style={{ color: '#fff' }} />
-
-                        </Button>
-                    ]
-                }>
-
-                <List.Item.Meta
-                    title={
-
-                        <Row
-                            style={
-                                {
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-start'
-                                }}>
-
-                            <Col
+                            <Row
+                                id={item.index}
                                 style={
                                     {
-                                        position: 'absolute',
-                                        left: 40
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'flex-start'
                                     }}>
 
-                                <Checkbox
-                                    checked={item.completed}
-                                    key={item.id}
-                                    onChange={(e) => { item.changeCompleted() }} />
+                                <Col
+                                    id={item.index}
+                                    style={
+                                        {
+                                            position: 'absolute',
+                                            left: 60
+                                        }}>
 
-                            </Col>
+                                    <Checkbox
+                                        id={item.index}
+                                        checked={item.completed}
+                                        key={item.id}
+                                        onChange={(e) => { item.changeCompleted() }} />
 
-                            <Col
-                                style={{ position: 'relative', left: 60, width: '90%' }}>
-                                { renderInput(item) }
-                            </Col>
+                                </Col>
 
-                        </Row>
+                                <Col
+                                    id={item.index}
+                                    style={{ position: 'relative', left: 60, width: '90%' }}>
+                                    {renderInput(item, isMovingElement)}
+                                </Col>
 
-                    }>
-                </List.Item.Meta>
+                            </Row>
 
-            </List.Item>
+                        }>
+                    </List.Item.Meta>
 
-        </div>
+                </List.Item>
+
+            </div>
+
+        </>
     )
 
 }

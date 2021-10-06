@@ -19,7 +19,7 @@ export default function PageFooter() {
                 Feito com <HeartTwoTone twoToneColor="#eb2f96" /> por Fabin Pereira dos Santos. De acordo com
 
                 <Link href="https://github.com/tastejs/todomvc/blob/master/app-spec.md#functionality">
-                    <a target={'_blank'}>{' '} TodoMVC functionality</a>
+                    <a target={'_blank'}>TodoMVC functionality</a>
                 </Link>
 
             </div>
